@@ -15,6 +15,7 @@ export default class Ship {
     this.inertia = 0.99;
     this.radius = 20;
     this.lastShot = 0;
+    this.shootSpeed = 300;
     this.create = args.create;
     this.onDie = args.onDie;
   }
@@ -50,6 +51,24 @@ export default class Ship {
     }
   }
 
+  strafe(dir) {
+    if (dir == 'LEFT') {
+      this.position.x -= 10;
+    }
+    if (dir == 'RIGHT') {
+      this.position.x += 10;
+    }
+  }
+
+  move(dir) {
+    if (dir == 'FORWARD') {
+      this.position.y -= 10;
+    }
+    if (dir == 'REVERSE') {
+      this.position.y += 10;
+    }
+  }
+
   accelerate(val){
     this.velocity.x -= Math.sin(-this.rotation*Math.PI/180) * this.speed;
     this.velocity.y -= Math.cos(-this.rotation*Math.PI/180) * this.speed;
@@ -74,15 +93,18 @@ export default class Ship {
   render(state){
     // Controls
     if(state.keys.up){
-      this.accelerate(1);
+      this.move('FORWARD');
+    }
+    if (state.keys.down) {
+      this.move('REVERSE');
     }
     if(state.keys.left){
-      this.rotate('LEFT');
+      this.strafe('LEFT');
     }
     if(state.keys.right){
-      this.rotate('RIGHT');
+      this.strafe('RIGHT');
     }
-    if(state.keys.space && Date.now() - this.lastShot > 300){
+    if(state.keys.space && Date.now() - this.lastShot > this.shootSpeed){
       const bullet = new Bullet({ship: this});
       this.create(bullet, 'bullets');
       this.lastShot = Date.now();
@@ -113,8 +135,8 @@ export default class Ship {
     context.save();
     context.translate(this.position.x, this.position.y);
     context.rotate(this.rotation * Math.PI / 180);
-    context.strokeStyle = '#ffffff';
-    context.fillStyle = '#000000';
+    context.strokeStyle = '#000';
+    context.fillStyle = '#fff';
     context.lineWidth = 2;
     context.beginPath();
     context.moveTo(0, -15);
