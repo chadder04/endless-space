@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Reacteroids } from './Reacteroids';
+import { Game } from './Game';
 import style from './style.css';
 
-render(<Reacteroids />, document.getElementById('root'));
+render(<Game />, document.getElementById('root'));
